@@ -2,7 +2,9 @@
 
 静态服务报价页，展示网站快检、整站体检、上线前质检和需求雷达等服务与价格。
 
-公开访问地址：`https://alex12138356.github.io/jiajingcheng-store/`
+公开访问地址（国内主用）：`https://jiajingcheng.com/service/`
+
+GitHub Pages 备用：`https://alex12138356.github.io/jiajingcheng-store/`（大陆网络访问可能不稳定）
 
 ## 说明
 
