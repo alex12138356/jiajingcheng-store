@@ -1,0 +1,243 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>网站快检与需求雷达</title>
+  <style>
+    :root {
+      --bg: #f4f7f6;
+      --surface: #ffffff;
+      --ink: #17211f;
+      --muted: #5b6a66;
+      --line: #dce5e2;
+      --accent: #0e766c;
+      --accent-strong: #0a5c55;
+      --accent-soft: #e1f0ed;
+      --warm: #8a5b00;
+      --warm-soft: #faf2dd;
+      --radius: 8px;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, "PingFang SC", "Microsoft YaHei", sans-serif;
+      background: var(--bg);
+      color: var(--ink);
+      line-height: 1.55;
+      letter-spacing: 0;
+    }
+    .page { width: min(960px, calc(100% - 32px)); margin: 24px auto; }
+    header {
+      padding: 30px 32px;
+      background: var(--accent);
+      color: #fff;
+      border-radius: var(--radius);
+    }
+    header h1 { margin: 0; font-size: 28px; line-height: 1.2; }
+    header p { margin: 10px 0 0; opacity: .94; }
+    .badges { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
+    .badge {
+      padding: 5px 10px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.16);
+      font-size: 12px;
+      font-weight: 700;
+    }
+    section {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 24px;
+      margin-top: 16px;
+    }
+    h2 { margin: 0 0 14px; font-size: 20px; }
+    .grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+    .product {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 16px;
+      background: #fbfdfc;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .product b { font-size: 16px; }
+    .product p { margin: 0; color: var(--muted); font-size: 14px; min-height: 42px; }
+    .price { color: var(--accent-strong); font-weight: 800; font-size: 20px; }
+    .unit { font-size: 13px; color: var(--muted); font-weight: 600; }
+    button, .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border: 0;
+      border-radius: var(--radius);
+      padding: 10px 14px;
+      background: var(--accent);
+      color: #fff;
+      font-weight: 800;
+      font-size: 14px;
+      cursor: pointer;
+      text-decoration: none;
+      width: 100%;
+    }
+    button:hover, .button:hover { background: var(--accent-strong); }
+    .secondary { background: #e9efed; color: var(--ink); }
+    .secondary:hover { background: #dde7e4; }
+    .order-box {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 16px;
+      background: #fbfdfc;
+    }
+    .order-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-top: 14px;
+    }
+    .pay-row {
+      display: grid;
+      grid-template-columns: 1fr 180px;
+      gap: 20px;
+      align-items: center;
+    }
+    .qr-box { text-align: center; }
+    .qr-box img {
+      width: 150px;
+      height: 150px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: #fff;
+      object-fit: cover;
+    }
+    .qr-box span { display: block; margin-top: 6px; color: var(--muted); font-size: 13px; font-weight: 700; }
+    table { width: 100%; border-collapse: collapse; }
+    th, td { padding: 9px 10px; border-bottom: 1px solid var(--line); text-align: left; vertical-align: top; font-size: 14px; }
+    th { background: var(--accent-soft); font-weight: 800; }
+    tr:last-child td { border-bottom: 0; }
+    .note { color: var(--muted); font-size: 13px; margin-top: 10px; }
+    .cta { background: var(--warm-soft); color: var(--warm); padding: 14px 16px; border-radius: var(--radius); font-weight: 800; margin-top: 14px; }
+    @media (max-width: 760px) {
+      .page { margin: 12px auto; }
+      header, section { padding: 20px; }
+      .grid { grid-template-columns: 1fr; }
+      .order-row, .pay-row { grid-template-columns: 1fr; }
+      .qr-box img { width: 140px; height: 140px; }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <header>
+      <h1>网站快检与需求雷达</h1>
+      <p>确认订单后提供微信付款码 · 报告可署你名 · 可开公司发票</p>
+      <div class="badges">
+        <span class="badge">24 小时交付</span>
+        <span class="badge">报告可署你名</span>
+        <span class="badge">每条问题带截图</span>
+        <span class="badge">深圳公司开票</span>
+      </div>
+    </header>
+
+    <section>
+      <h2>选择服务</h2>
+      <div class="grid" id="products">
+        <article class="product">
+          <b>单页快检</b>
+          <p>1 个页面，桌面 + 手机截图，最多 3 个确认问题。</p>
+          <div class="price">¥99 <span class="unit">/ 次</span></div>
+          <button type="button" onclick="choose('单页快检', 99)">选择</button>
+        </article>
+        <article class="product">
+          <b>标准快检</b>
+          <p>首页 + 1 个关键服务页，完整报告 + 截图，24 小时交付。</p>
+          <div class="price">¥199 <span class="unit">/ 次</span></div>
+          <button type="button" onclick="choose('标准快检', 199)">选择</button>
+        </article>
+        <article class="product">
+          <b>整站体检 / SEO 初检</b>
+          <p>全站主要页面，或首页 + 最多 5 个 URL 的 SEO 检查。</p>
+          <div class="price">¥399 <span class="unit">/ 次</span></div>
+          <button type="button" onclick="choose('整站体检 / SEO 初检', 399)">选择</button>
+        </article>
+        <article class="product">
+          <b>上线前质检</b>
+          <p>核心路径检查 + 一次复测，适合准备上线的网站。</p>
+          <div class="price">¥499 <span class="unit">/ 次</span></div>
+          <button type="button" onclick="choose('上线前质检', 499)">选择</button>
+        </article>
+        <article class="product">
+          <b>整站体检月包</b>
+          <p>每月 2 次固定范围检查，持续跟踪网站健康变化。</p>
+          <div class="price">¥299 <span class="unit">/ 月</span></div>
+          <button type="button" onclick="choose('整站体检月包', 299)">选择</button>
+        </article>
+        <article class="product">
+          <b>需求雷达</b>
+          <p>每天 09:00 前微信发送 5 条可接单机会，适合想接单的人。</p>
+          <div class="price">¥99 <span class="unit">/ 月</span></div>
+          <button type="button" onclick="choose('需求雷达', 99)">选择</button>
+        </article>
+      </div>
+    </section>
+
+    <section id="order">
+      <h2>咨询与下单</h2>
+      <p class="note">本页面只展示服务与报价，不直接处理支付；确认订单后通过微信发送专属付款码。</p>
+      <div class="order-box">
+        <div><b>你选择的服务：</b><span id="selected">还没有选择</span></div>
+        <div><b>金额：</b><span id="amount">-</span></div>
+        <div class="order-row">
+          <a class="button secondary" id="mailLink" href="mailto:info@jiajingcheng.com?subject=佳景程服务下单">发邮件下单</a>
+          <button class="secondary" type="button" onclick="reset()">重新选择</button>
+        </div>
+      </div>
+      <div class="pay-row">
+        <div>
+          <p>确认订单后，我们会通过微信发送对应金额的专属付款码。</p>
+          <p>先付款后交付；需要发票时提供开票信息。</p>
+          <div class="cta">加微信发送：服务名称 + 网站链接或需求</div>
+        </div>
+        <div class="qr-box">
+          <img src="assets/wechat-friend-qr.png" alt="微信好友二维码">
+          <span>微信好友二维码</span>
+        </div>
+      </div>
+      <p class="note">付款码按订单生成，不在页面长期展示。收款方：深圳市佳景程科技有限公司，需要发票时登记开票信息。</p>
+    </section>
+
+    <section>
+      <h2>交付说明</h2>
+      <table>
+        <tr><th>服务</th><th>交付物</th><th>时间</th></tr>
+        <tr><td>网站快检</td><td>报告 + 截图 + 问题优先级</td><td>付款后 24 小时内</td></tr>
+        <tr><td>整站体检月包</td><td>每月 2 次检查 + 变化对比</td><td>按约定日期交付</td></tr>
+        <tr><td>需求雷达</td><td>每天 5 条可接单机会</td><td>每天 09:00 前微信发送</td></tr>
+      </table>
+    </section>
+  </main>
+
+  <script>
+    const products = {
+      "单页快检": 99,
+      "标准快检": 199,
+      "整站体检 / SEO 初检": 399,
+      "上线前质检": 499,
+      "整站体检月包": 299,
+      "需求雷达": 99
+    };
+    function choose(name, price) {
+      document.getElementById("selected").textContent = name;
+      document.getElementById("amount").textContent = "¥" + price;
+      const link = document.getElementById("mailLink");
+      link.href = "mailto:info@jiajingcheng.com?subject=" + encodeURIComponent("佳景程服务下单：" + name) + "&body=" + encodeURIComponent("我想购买：" + name + "\n金额：¥" + price + "\n我的需求：");
+      document.getElementById("order").scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+    function reset() {
+      document.getElementById("selected").textContent = "还没有选择";
+      document.getElementById("amount").textContent = "-";
+    }
+  </script>
+</body>
+</html>
