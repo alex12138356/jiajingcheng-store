@@ -1,0 +1,254 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AI 自动化安装服务 · 佳景程科技</title>
+  <style>
+    :root {
+      --bg: #111318;
+      --ink: #f5efe3;
+      --muted: #a8a39a;
+      --teal: #5ce0c6;
+      --amber: #ffc46b;
+      --pink: #ff8fae;
+      --line: rgba(245, 239, 227, 0.14);
+    }
+
+    * { box-sizing: border-box; }
+
+    html, body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
+    }
+
+    .wrap {
+      max-width: 1080px;
+      margin: 0 auto;
+      padding: 0 22px;
+    }
+
+    nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 22px 0;
+    }
+
+    .brand {
+      font-weight: 700;
+      font-size: 17px;
+    }
+
+    .brand span {
+      color: var(--amber);
+    }
+
+    .cta-link {
+      color: var(--ink);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 9px 14px;
+      text-decoration: none;
+      font-size: 14px;
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 34px;
+      align-items: center;
+      padding: 64px 0 74px;
+    }
+
+    h1 {
+      margin: 0 0 18px;
+      font-size: 48px;
+      line-height: 1.12;
+      letter-spacing: 0;
+    }
+
+    .lead {
+      color: var(--muted);
+      font-size: 18px;
+      line-height: 1.7;
+      margin: 0 0 26px;
+    }
+
+    .button {
+      display: inline-block;
+      background: var(--amber);
+      color: #191309;
+      font-weight: 700;
+      border-radius: 8px;
+      padding: 14px 20px;
+      text-decoration: none;
+    }
+
+    .shot {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 24px 80px rgba(0, 0, 0, 0.35);
+    }
+
+    .shot img {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
+
+    section {
+      padding: 46px 0;
+      border-top: 1px solid var(--line);
+    }
+
+    h2 {
+      margin: 0 0 24px;
+      font-size: 28px;
+      letter-spacing: 0;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 14px;
+    }
+
+    .card {
+      background: #1b1e25;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 18px;
+    }
+
+    .card h3 {
+      margin: 0 0 8px;
+      font-size: 17px;
+      color: var(--teal);
+    }
+
+    .card p {
+      margin: 0;
+      color: #cfc9be;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .price {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+
+    .price .card {
+      flex: 1 1 240px;
+    }
+
+    .price .num {
+      font-size: 30px;
+      font-weight: 700;
+      color: var(--amber);
+    }
+
+    .note {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.7;
+      margin: 18px 0 0;
+    }
+
+    footer {
+      border-top: 1px solid var(--line);
+      padding: 30px 0 50px;
+      color: var(--muted);
+      font-size: 13px;
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    @media (max-width: 760px) {
+      .hero {
+        grid-template-columns: 1fr;
+        padding: 40px 0 50px;
+      }
+
+      h1 {
+        font-size: 34px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <nav>
+      <div class="brand">佳景程科技<span> · AI 自动化</span></div>
+      <a class="cta-link" href="mailto:info@jiajingcheng.com">info@jiajingcheng.com</a>
+    </nav>
+
+    <div class="hero">
+      <div>
+        <h1>给公司装一个 AI 员工</h1>
+        <p class="lead">自动盯网站、整理订单、生成日报、做表格、发提醒。你负责说需求，我们负责把系统装好。</p>
+        <a class="button" href="mailto:info@jiajingcheng.com?subject=AI自动化安装咨询">预约配置</a>
+      </div>
+      <div class="shot">
+        <img src="assets/codexos.png" alt="Codex OS 控制台截图">
+      </div>
+    </div>
+
+    <section>
+      <h2>适合谁</h2>
+      <div class="grid">
+        <div class="card"><h3>电商 / 代运营</h3><p>订单、库存、客服表格太多，想让重复活自动跑。</p></div>
+        <div class="card"><h3>工作室 / 小团队</h3><p>没有专职技术，但有很多固定流程需要每天做。</p></div>
+        <div class="card"><h3>有网站的公司</h3><p>网站挂了没人知道，想有人 24 小时盯着并及时提醒。</p></div>
+        <div class="card"><h3>内容团队</h3><p>周报、PPT、短视频反复做，想让一份材料自动变成多种产出。</p></div>
+      </div>
+    </section>
+
+    <section>
+      <h2>交付内容</h2>
+      <div class="grid">
+        <div class="card"><h3>网站监控</h3><p>网站/接口异常自动提醒，不用天天人工检查。</p></div>
+        <div class="card"><h3>自动日报</h3><p>每天自动汇总设备、订单、任务状态，发到手机。</p></div>
+        <div class="card"><h3>表格处理</h3><p>订单表、库存表、客户表自动整理和统计。</p></div>
+        <div class="card"><h3>消息提醒</h3><p>重要事情通过 Telegram 或邮件准时提醒。</p></div>
+        <div class="card"><h3>内容流水线</h3><p>一个源文件自动生成 CSV、PPT、短视频。</p></div>
+        <div class="card"><h3>多任务调度</h3><p>多个 AI 子任务并行干活，最后汇总成一份报告。</p></div>
+      </div>
+    </section>
+
+    <section>
+      <h2>价格</h2>
+      <div class="price">
+        <div class="card">
+          <h3>安装 + 陪跑</h3>
+          <div class="num">¥499-999</div>
+          <p>一次装好，教会你日常使用。</p>
+        </div>
+        <div class="card">
+          <h3>每月维护</h3>
+          <div class="num">¥199-299 / 月</div>
+          <p>持续维护、调优、新增小自动化。</p>
+        </div>
+        <div class="card">
+          <h3>海外客户</h3>
+          <div class="num">US$79-149</div>
+          <p>支持英文交付，走平台或对公收款。</p>
+        </div>
+      </div>
+      <p class="note">不承诺排名、流量或收入；不碰个人微信自动化；所有交付先确认需求再开工。</p>
+    </section>
+
+    <footer>
+      <span>深圳市佳景程科技有限公司 · 可开票</span>
+      <span>info@jiajingcheng.com</span>
+    </footer>
+  </div>
+</body>
+</html>
