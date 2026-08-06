@@ -1,0 +1,876 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>星环疾驰 · 3D</title>
+  <style>
+    :root {
+      --bg: #05070f;
+      --cyan: #4ee6ff;
+      --magenta: #ff4ed8;
+      --amber: #ffb84d;
+      --text: #eaf6ff;
+      --muted: #8ca6bd;
+      --panel: rgba(9, 15, 28, 0.78);
+      --border: rgba(126, 186, 255, 0.24);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background: var(--bg);
+      color: var(--text);
+      font-family: "PingFang SC", "Microsoft YaHei", system-ui, sans-serif;
+      letter-spacing: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    canvas {
+      display: block;
+      width: 100vw;
+      height: 100vh;
+      touch-action: none;
+    }
+
+    #hud {
+      position: fixed;
+      inset: 0;
+      z-index: 3;
+      pointer-events: none;
+    }
+
+    .chip {
+      position: fixed;
+      padding: 8px 14px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: var(--panel);
+      backdrop-filter: blur(10px);
+      font-size: 14px;
+      font-weight: 600;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+    }
+
+    #score {
+      top: max(14px, env(safe-area-inset-top));
+      left: 14px;
+      color: var(--cyan);
+    }
+
+    #best {
+      top: 62px;
+      left: 14px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    #speed {
+      top: max(14px, env(safe-area-inset-top));
+      right: 14px;
+      color: var(--amber);
+    }
+
+    #hearts {
+      top: max(14px, env(safe-area-inset-top));
+      left: 50%;
+      transform: translateX(-50%);
+      color: #ff6b9d;
+      letter-spacing: 2px;
+    }
+
+    #hint {
+      position: fixed;
+      bottom: max(18px, env(safe-area-inset-bottom));
+      left: 50%;
+      transform: translateX(-50%);
+      color: var(--muted);
+      font-size: 12px;
+      white-space: nowrap;
+      opacity: 0.75;
+      text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
+    }
+
+    #combo {
+      position: fixed;
+      top: 18%;
+      left: 50%;
+      transform: translateX(-50%);
+      color: var(--magenta);
+      font-size: 24px;
+      font-weight: 900;
+      opacity: 0;
+      text-shadow: 0 0 18px rgba(255, 78, 216, 0.45);
+      pointer-events: none;
+      transition: opacity 0.18s ease;
+    }
+
+    #brand {
+      position: fixed;
+      left: 14px;
+      bottom: max(18px, env(safe-area-inset-bottom));
+      color: var(--muted);
+      font-size: 11px;
+      text-decoration: none;
+      opacity: 0.7;
+      z-index: 4;
+    }
+
+    #pause {
+      position: fixed;
+      right: 14px;
+      bottom: max(18px, env(safe-area-inset-bottom));
+      width: 44px;
+      height: 44px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: var(--panel);
+      color: var(--text);
+      font-size: 16px;
+      cursor: pointer;
+      pointer-events: auto;
+      display: none;
+    }
+
+    .overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 5;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      background: radial-gradient(circle at 50% 42%, rgba(22, 42, 74, 0.45), rgba(5, 7, 15, 0.88));
+    }
+
+    .panel {
+      width: min(360px, 92vw);
+      padding: 28px 24px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: var(--panel);
+      text-align: center;
+      box-shadow: 0 24px 80px rgba(0, 0, 0, 0.55);
+    }
+
+    h1 {
+      margin: 0 0 10px;
+      font-size: 30px;
+      font-weight: 800;
+      color: var(--cyan);
+      text-shadow: 0 0 22px rgba(78, 230, 255, 0.35);
+    }
+
+    p {
+      margin: 0 0 22px;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    button {
+      min-width: 132px;
+      padding: 12px 22px;
+      border: 0;
+      border-radius: 8px;
+      background: linear-gradient(135deg, #24d4ff, #7b5cff);
+      color: #04121f;
+      font-size: 16px;
+      font-weight: 800;
+      cursor: pointer;
+      box-shadow: 0 12px 32px rgba(36, 212, 255, 0.32);
+    }
+
+    button.secondary {
+      margin-left: 10px;
+      background: rgba(255, 255, 255, 0.12);
+      color: var(--text);
+      box-shadow: none;
+      border: 1px solid var(--border);
+    }
+
+    .final-score {
+      margin: 4px 0 22px;
+      color: var(--amber);
+      font-size: 22px;
+      font-weight: 800;
+    }
+
+    .best-line {
+      margin: 0 0 18px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    button.wide {
+      width: 100%;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    @media (max-width: 700px) {
+      .chip {
+        padding: 6px 10px;
+        font-size: 12px;
+      }
+
+      h1 {
+        font-size: 26px;
+      }
+
+      #hint {
+        font-size: 11px;
+      }
+
+      #best {
+        top: 52px;
+      }
+
+      #brand {
+        font-size: 10px;
+      }
+    }
+  </style>
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "./vendor/three.module.js"
+      }
+    }
+  </script>
+</head>
+<body>
+  <div id="hud">
+    <div id="score" class="chip">得分 0</div>
+    <div id="best" class="chip">最高分 0</div>
+    <div id="speed" class="chip">速度 1.0x</div>
+    <div id="hearts" class="chip">♥♥♥</div>
+    <div id="hint">方向键 / WASD 移动 · 手机按住拖动</div>
+    <div id="combo"></div>
+    <button id="pause" title="暂停">II</button>
+  </div>
+  <a id="brand" href="https://jiajingcheng.com" target="_blank" rel="noopener">佳景程科技出品 · jiajingcheng.com</a>
+
+  <div id="startScreen" class="overlay">
+    <div class="panel">
+      <h1>星环疾驰</h1>
+      <p>穿过星环，收集能量，躲开红色障碍。</p>
+      <div class="best-line" id="startBest">最高分 0</div>
+      <button id="startBtn">开始</button>
+    </div>
+  </div>
+
+  <div id="endScreen" class="overlay hidden">
+    <div class="panel">
+      <h1>星环坠落</h1>
+      <div class="final-score" id="finalScore">得分 0</div>
+      <div class="best-line" id="finalBest">最高分 0</div>
+      <button class="wide" id="copyBtn">复制战绩</button>
+      <div style="height:10px"></div>
+      <button id="againBtn">再来一局</button>
+    </div>
+  </div>
+
+  <div id="pauseScreen" class="overlay hidden">
+    <div class="panel">
+      <h1>已暂停</h1>
+      <p>休息一下，随时继续。</p>
+      <button id="resumeBtn">继续</button>
+      <button class="secondary" id="quitBtn">退出</button>
+    </div>
+  </div>
+
+  <script type="module">
+    import * as THREE from "three";
+
+    const renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: "high-performance" });
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setClearColor(0x05070f);
+    document.body.appendChild(renderer.domElement);
+
+    const scene = new THREE.Scene();
+    scene.fog = new THREE.FogExp2(0x05070f, 0.018);
+
+    const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 120);
+    camera.position.set(0, 0.8, 7.2);
+    camera.lookAt(0, 0, 0);
+
+    scene.add(new THREE.HemisphereLight(0x9fc7ff, 0x150b24, 1.15));
+    const keyLight = new THREE.PointLight(0x9adcff, 28, 24);
+    keyLight.position.set(2, 4, 4);
+    scene.add(keyLight);
+    const rimLight = new THREE.PointLight(0xff4ed8, 16, 26);
+    rimLight.position.set(-4, -2, 3);
+    scene.add(rimLight);
+
+    const starCount = 700;
+    const starGeo = new THREE.BufferGeometry();
+    const starPos = new Float32Array(starCount * 3);
+    for (let i = 0; i < starCount; i++) {
+      starPos[i * 3] = (Math.random() - 0.5) * 70;
+      starPos[i * 3 + 1] = (Math.random() - 0.5) * 40;
+      starPos[i * 3 + 2] = -20 - Math.random() * 55;
+    }
+    starGeo.setAttribute("position", new THREE.BufferAttribute(starPos, 3));
+    const stars = new THREE.Points(starGeo, new THREE.PointsMaterial({
+      color: 0xa9d9ff,
+      size: 0.12,
+      transparent: true,
+      opacity: 0.8,
+    }));
+    scene.add(stars);
+
+    const dustCount = 260;
+    const dustGeo = new THREE.BufferGeometry();
+    const dustPos = new Float32Array(dustCount * 3);
+    for (let i = 0; i < dustCount; i++) {
+      dustPos[i * 3] = (Math.random() - 0.5) * 14;
+      dustPos[i * 3 + 1] = (Math.random() - 0.5) * 9;
+      dustPos[i * 3 + 2] = -28 + Math.random() * 30;
+    }
+    dustGeo.setAttribute("position", new THREE.BufferAttribute(dustPos, 3));
+    const dust = new THREE.Points(dustGeo, new THREE.PointsMaterial({
+      color: 0x4ee6ff,
+      size: 0.07,
+      transparent: true,
+      opacity: 0.45,
+    }));
+    scene.add(dust);
+
+    const playerGroup = new THREE.Group();
+    const playerBall = new THREE.Mesh(
+      new THREE.SphereGeometry(0.58, 32, 32),
+      new THREE.MeshStandardMaterial({
+        color: 0x9ee8ff,
+        emissive: 0x2bb6ff,
+        emissiveIntensity: 1.35,
+        metalness: 0.35,
+        roughness: 0.25,
+      })
+    );
+    playerGroup.add(playerBall);
+    const halo = new THREE.Mesh(
+      new THREE.TorusGeometry(0.86, 0.045, 10, 48),
+      new THREE.MeshBasicMaterial({
+        color: 0x4ee6ff,
+        transparent: true,
+        opacity: 0.72,
+      })
+    );
+    halo.rotation.x = Math.PI / 2;
+    playerGroup.add(halo);
+    playerGroup.position.set(0, 0, 0.4);
+    scene.add(playerGroup);
+
+    const objects = [];
+    const effects = [];
+    const maxX = 4.2;
+    const maxY = 2.8;
+
+    const state = {
+      running: false,
+      paused: false,
+      over: false,
+      score: 0,
+      distance: 0,
+      speed: 9,
+      health: 3,
+      invuln: 0,
+      combo: 0,
+      comboTimer: 0,
+      nextSpawn: 16,
+    };
+
+    let best = 0;
+    try {
+      best = Number(localStorage.getItem("star-rush-best") || 0) || 0;
+    } catch (e) {
+      best = 0;
+    }
+
+    const player = { x: 0, y: 0, tx: 0, ty: 0 };
+    const keys = {};
+    const pointer = { active: false, lastX: 0, lastY: 0, dx: 0, dy: 0 };
+
+    const scoreEl = document.getElementById("score");
+    const speedEl = document.getElementById("speed");
+    const heartsEl = document.getElementById("hearts");
+    const startScreen = document.getElementById("startScreen");
+    const endScreen = document.getElementById("endScreen");
+    const pauseScreen = document.getElementById("pauseScreen");
+    const finalScoreEl = document.getElementById("finalScore");
+    const pauseBtn = document.getElementById("pause");
+
+    let audioCtx = null;
+
+    function ensureAudio() {
+      if (!audioCtx) {
+        try {
+          audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        } catch (e) {
+          audioCtx = null;
+        }
+      }
+      if (audioCtx && audioCtx.state === "suspended") {
+        audioCtx.resume();
+      }
+    }
+
+    function tone(freq, duration, type = "sine", volume = 0.08) {
+      if (!audioCtx) return;
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.type = type;
+      osc.frequency.value = freq;
+      gain.gain.setValueAtTime(volume, audioCtx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + duration);
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      osc.start();
+      osc.stop(audioCtx.currentTime + duration + 0.02);
+    }
+
+    function makeObstacle(x, y, z) {
+      const size = 0.72 + Math.random() * 0.32;
+      const mesh = new THREE.Mesh(
+        new THREE.OctahedronGeometry(size, 0),
+        new THREE.MeshStandardMaterial({
+          color: 0xff3d71,
+          emissive: 0xff2050,
+          emissiveIntensity: 0.9,
+          metalness: 0.35,
+          roughness: 0.32,
+        })
+      );
+      mesh.position.set(x, y, z);
+      mesh.rotation.set(Math.random(), Math.random(), Math.random());
+      scene.add(mesh);
+      objects.push({ kind: "obstacle", mesh, radius: size + 0.42, spin: 0.8 + Math.random() * 1.4 });
+    }
+
+    function makeGem(x, y, z) {
+      const mesh = new THREE.Mesh(
+        new THREE.IcosahedronGeometry(0.42, 0),
+        new THREE.MeshStandardMaterial({
+          color: 0x35f0c8,
+          emissive: 0x15d6a8,
+          emissiveIntensity: 1.25,
+          metalness: 0.5,
+          roughness: 0.2,
+        })
+      );
+      mesh.position.set(x, y, z);
+      scene.add(mesh);
+      objects.push({ kind: "gem", mesh, radius: 0.78, phase: Math.random() * Math.PI * 2 });
+    }
+
+    function makeRing(z) {
+      const mesh = new THREE.Mesh(
+        new THREE.TorusGeometry(5.1, 0.11, 12, 64),
+        new THREE.MeshBasicMaterial({
+          color: 0x4ee6ff,
+          transparent: true,
+          opacity: 0.32,
+        })
+      );
+      mesh.position.set(0, 0, z);
+      scene.add(mesh);
+      objects.push({ kind: "ring", mesh, radius: 0 });
+    }
+
+    function spawnPattern() {
+      const zBase = -78;
+      const rowYs = [-1.15, 0.35, 1.55];
+      for (let r = 0; r < 3; r++) {
+        const z = zBase - r * 17;
+        const gap = Math.floor(Math.random() * 5);
+        for (let i = 0; i < 5; i++) {
+          if (i === gap) continue;
+          const x = (i - 2) * 1.72;
+          const y = rowYs[r] + (Math.random() - 0.5) * 0.8;
+          makeObstacle(x, y, z);
+        }
+        makeGem((gap - 2) * 1.72 + (Math.random() - 0.5) * 0.6, rowYs[r] + 0.3, z - 3);
+      }
+      makeRing(zBase - 12);
+      state.nextSpawn = 21 + Math.random() * 12;
+    }
+
+    function burst(position, color) {
+      const count = 18;
+      const geo = new THREE.BufferGeometry();
+      const pos = new Float32Array(count * 3);
+      const dirs = [];
+      for (let i = 0; i < count; i++) {
+        const dir = new THREE.Vector3(
+          (Math.random() - 0.5) * 2,
+          (Math.random() - 0.5) * 2,
+          (Math.random() - 0.5) * 2
+        ).normalize();
+        dirs.push(dir);
+        pos.set([position.x, position.y, position.z], i * 3);
+      }
+      geo.setAttribute("position", new THREE.BufferAttribute(pos, 3));
+      const pts = new THREE.Points(geo, new THREE.PointsMaterial({
+        color,
+        size: 0.13,
+        transparent: true,
+        opacity: 1,
+      }));
+      pts.position.copy(position);
+      scene.add(pts);
+      effects.push({ pts, dirs, life: 0.65 });
+    }
+
+    function resetGame() {
+      for (const item of objects) {
+        scene.remove(item.mesh);
+        item.mesh.geometry.dispose();
+        item.mesh.material.dispose();
+      }
+      objects.length = 0;
+      for (const effect of effects) {
+        scene.remove(effect.pts);
+        effect.pts.geometry.dispose();
+        effect.pts.material.dispose();
+      }
+      effects.length = 0;
+      state.score = 0;
+      state.distance = 0;
+      state.speed = 9;
+      state.health = 3;
+      state.invuln = 0;
+      state.combo = 0;
+      state.comboTimer = 0;
+      state.nextSpawn = 14;
+      state.over = false;
+      state.paused = false;
+      player.x = 0;
+      player.y = 0;
+      player.tx = 0;
+      player.ty = 0;
+      playerGroup.position.set(0, 0, 0.4);
+      updateHud();
+    }
+
+    function startGame() {
+      ensureAudio();
+      resetGame();
+      state.running = true;
+      startScreen.classList.add("hidden");
+      endScreen.classList.add("hidden");
+      pauseScreen.classList.add("hidden");
+      pauseBtn.style.display = "block";
+      document.getElementById("startBest").textContent = "最高分 " + best;
+      tone(520, 0.12, "triangle", 0.06);
+    }
+
+    function endGame() {
+      state.running = false;
+      state.over = true;
+      pauseBtn.style.display = "none";
+      const finalScore = Math.floor(state.score);
+      if (finalScore > best) {
+        best = finalScore;
+        try {
+          localStorage.setItem("star-rush-best", String(best));
+        } catch (e) {
+          // localStorage may be unavailable; score still works for this session.
+        }
+      }
+      finalScoreEl.textContent = "得分 " + finalScore;
+      document.getElementById("finalBest").textContent = "最高分 " + best;
+      endScreen.classList.remove("hidden");
+      tone(180, 0.35, "sawtooth", 0.05);
+    }
+
+    function updateHud() {
+      scoreEl.textContent = "得分 " + Math.floor(state.score);
+      speedEl.textContent = "速度 " + state.speed.toFixed(1) + "x";
+      heartsEl.textContent = "♥".repeat(Math.max(0, state.health)) + "♡".repeat(Math.max(0, 3 - state.health));
+      document.getElementById("best").textContent = "最高分 " + best;
+      const comboEl = document.getElementById("combo");
+      if (state.combo >= 2 && state.comboTimer > 0) {
+        const multiplier = Math.min(3, 1 + (state.combo - 1) * 0.25);
+        comboEl.textContent = "连击 x" + state.combo + " · " + multiplier.toFixed(2) + " 倍";
+        comboEl.style.opacity = "1";
+      } else {
+        comboEl.style.opacity = "0";
+      }
+    }
+
+    function movePlayer(dt) {
+      const accel = 7.2;
+      if (keys["ArrowLeft"] || keys["KeyA"]) player.tx -= accel * dt;
+      if (keys["ArrowRight"] || keys["KeyD"]) player.tx += accel * dt;
+      if (keys["ArrowUp"] || keys["KeyW"]) player.ty += accel * dt;
+      if (keys["ArrowDown"] || keys["KeyS"]) player.ty -= accel * dt;
+      player.tx += pointer.dx * 0.024;
+      player.ty += pointer.dy * 0.024;
+      pointer.dx = 0;
+      pointer.dy = 0;
+      player.tx = Math.max(-maxX, Math.min(maxX, player.tx));
+      player.ty = Math.max(-maxY, Math.min(maxY, player.ty));
+      player.x = THREE.MathUtils.lerp(player.x, player.tx, Math.min(1, dt * 11));
+      player.y = THREE.MathUtils.lerp(player.y, player.ty, Math.min(1, dt * 11));
+      playerGroup.position.x = player.x;
+      playerGroup.position.y = player.y;
+      playerGroup.rotation.z = -player.x * 0.12;
+      playerGroup.rotation.x = player.y * 0.1;
+      playerBall.rotation.x += dt * 3;
+    }
+
+    function updateObjects(dt) {
+      state.nextSpawn -= dt * state.speed * 0.75;
+      if (state.nextSpawn <= 0) spawnPattern();
+
+      const remove = [];
+      for (let i = 0; i < objects.length; i++) {
+        const item = objects[i];
+        item.mesh.position.z += state.speed * dt;
+        if (item.kind === "obstacle") {
+          item.mesh.rotation.x += item.spin * dt;
+          item.mesh.rotation.y += item.spin * 0.7 * dt;
+        } else if (item.kind === "gem") {
+          item.mesh.rotation.y += dt * 2.4;
+          item.mesh.position.y += Math.sin(performance.now() * 0.004 + item.phase) * dt * 0.7;
+        }
+        if (item.mesh.position.z > 8) remove.push(i);
+      }
+      for (let i = remove.length - 1; i >= 0; i--) {
+        const idx = remove[i];
+        const item = objects[idx];
+        scene.remove(item.mesh);
+        item.mesh.geometry.dispose();
+        item.mesh.material.dispose();
+        objects.splice(idx, 1);
+      }
+    }
+
+    function checkCollisions() {
+      state.invuln = Math.max(0, state.invuln - 0.016);
+      const remove = [];
+      for (let i = 0; i < objects.length; i++) {
+        const item = objects[i];
+        if (item.kind === "ring") continue;
+        const dist = Math.hypot(item.mesh.position.x - player.x, item.mesh.position.y - player.y, item.mesh.position.z - 0.4);
+        if (dist < item.radius + 0.42) {
+          remove.push(i);
+          if (item.kind === "gem") {
+            state.combo += 1;
+            state.comboTimer = 3.2;
+            const multiplier = Math.min(3, 1 + (state.combo - 1) * 0.25);
+            state.score += 50 * multiplier;
+            burst(item.mesh.position, 0x35f0c8);
+            tone(680 + Math.min(360, state.combo * 40), 0.09, "triangle", 0.06);
+          } else if (state.invuln <= 0) {
+            state.health -= 1;
+            state.invuln = 1.15;
+            state.combo = 0;
+            state.comboTimer = 0;
+            burst(item.mesh.position, 0xff4d7d);
+            tone(220, 0.18, "sawtooth", 0.05);
+            if (state.health <= 0) {
+              endGame();
+              return;
+            }
+          } else {
+            remove.pop();
+          }
+        }
+      }
+      for (let i = remove.length - 1; i >= 0; i--) {
+        const idx = remove[i];
+        const item = objects[idx];
+        scene.remove(item.mesh);
+        item.mesh.geometry.dispose();
+        item.mesh.material.dispose();
+        objects.splice(idx, 1);
+      }
+    }
+
+    function updateEffects(dt) {
+      for (let i = effects.length - 1; i >= 0; i--) {
+        const effect = effects[i];
+        effect.life -= dt;
+        const attr = effect.pts.geometry.attributes.position;
+        const arr = attr.array;
+        for (let j = 0; j < arr.length; j += 3) {
+          const d = effect.dirs[j / 3];
+          arr[j] += d.x * dt * 5;
+          arr[j + 1] += d.y * dt * 5;
+          arr[j + 2] += d.z * dt * 5;
+        }
+        attr.needsUpdate = true;
+        effect.pts.material.opacity = Math.max(0, effect.life / 0.65);
+        if (effect.life <= 0) {
+          scene.remove(effect.pts);
+          effect.pts.geometry.dispose();
+          effect.pts.material.dispose();
+          effects.splice(i, 1);
+        }
+      }
+    }
+
+    function updateDust(dt) {
+      const attr = dust.geometry.attributes.position;
+      const arr = attr.array;
+      for (let i = 0; i < arr.length; i += 3) {
+        arr[i + 2] += state.speed * dt;
+        if (arr[i + 2] > 5) arr[i + 2] = -28;
+      }
+      attr.needsUpdate = true;
+      stars.rotation.y += dt * 0.005;
+    }
+
+    function updateCamera(dt) {
+      camera.position.x = THREE.MathUtils.lerp(camera.position.x, player.x * 0.35, Math.min(1, dt * 5));
+      camera.position.y = THREE.MathUtils.lerp(camera.position.y, player.y * 0.35 + 0.8, Math.min(1, dt * 5));
+      camera.lookAt(player.x * 0.65, player.y * 0.65, 0);
+      keyLight.position.x = player.x + 2;
+      keyLight.position.y = player.y + 4;
+      rimLight.position.x = player.x - 4;
+      rimLight.position.y = player.y - 2;
+    }
+
+    const clock = new THREE.Clock();
+
+    function animate() {
+      const dt = Math.min(0.05, clock.getDelta());
+      if (state.running && !state.paused) {
+        state.distance += state.speed * dt;
+        state.score += state.speed * dt * 0.12;
+        state.speed = Math.min(28, 9 + state.distance * 0.0016);
+        movePlayer(dt);
+        updateObjects(dt);
+        checkCollisions();
+        state.comboTimer = Math.max(0, state.comboTimer - dt);
+        if (state.comboTimer === 0) state.combo = 0;
+        updateEffects(dt);
+        updateDust(dt);
+        updateHud();
+      }
+      if (!state.running) {
+        updateDust(dt * 0.35);
+        updateEffects(dt);
+        playerGroup.rotation.z = Math.sin(performance.now() * 0.001) * 0.1;
+      }
+      updateCamera(dt);
+      renderer.render(scene, camera);
+      renderer.setAnimationLoop(animate);
+    }
+
+    renderer.setAnimationLoop(animate);
+
+    window.addEventListener("resize", () => {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+    });
+
+    renderer.domElement.addEventListener("webglcontextlost", (event) => event.preventDefault());
+
+    document.getElementById("startBest").textContent = "最高分 " + best;
+
+    function copyResult() {
+      const text = "我在「星环疾驰」拿到 " + Math.floor(state.score) + " 分，最高 " + best + " 分。你能破吗？";
+      const done = () => {
+        tone(620, 0.1, "triangle", 0.05);
+        document.getElementById("copyBtn").textContent = "已复制";
+        setTimeout(() => {
+          document.getElementById("copyBtn").textContent = "复制战绩";
+        }, 1600);
+      };
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(done).catch(() => fallbackCopy(text, done));
+      } else {
+        fallbackCopy(text, done);
+      }
+    }
+
+    function fallbackCopy(text, done) {
+      const area = document.createElement("textarea");
+      area.value = text;
+      area.style.position = "fixed";
+      area.style.opacity = "0";
+      document.body.appendChild(area);
+      area.select();
+      try {
+        document.execCommand("copy");
+      } catch (e) {
+        window.prompt("复制战绩", text);
+      }
+      area.remove();
+      done();
+    }
+
+    document.getElementById("startBtn").addEventListener("click", startGame);
+    document.getElementById("againBtn").addEventListener("click", startGame);
+    document.getElementById("copyBtn").addEventListener("click", copyResult);
+    pauseBtn.addEventListener("click", () => {
+      if (!state.running || state.over) return;
+      state.paused = true;
+      pauseScreen.classList.remove("hidden");
+      tone(320, 0.1, "triangle", 0.04);
+    });
+    document.getElementById("resumeBtn").addEventListener("click", () => {
+      state.paused = false;
+      pauseScreen.classList.add("hidden");
+      clock.getDelta();
+      tone(480, 0.1, "triangle", 0.04);
+    });
+    document.getElementById("quitBtn").addEventListener("click", () => {
+      state.paused = false;
+      state.running = false;
+      pauseScreen.classList.add("hidden");
+      endGame();
+    });
+
+    window.addEventListener("keydown", (event) => {
+      if (["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown", "Space"].includes(event.code)) {
+        event.preventDefault();
+      }
+      if (event.code === "KeyP" && state.running && !state.over) {
+        state.paused = !state.paused;
+        pauseScreen.classList.toggle("hidden", !state.paused);
+        if (!state.paused) clock.getDelta();
+      }
+      keys[event.code] = true;
+    });
+    window.addEventListener("keyup", (event) => {
+      keys[event.code] = false;
+    });
+
+    window.addEventListener("pointerdown", (event) => {
+      ensureAudio();
+      pointer.active = true;
+      pointer.lastX = event.clientX;
+      pointer.lastY = event.clientY;
+      pointer.dx = 0;
+      pointer.dy = 0;
+    });
+    window.addEventListener("pointermove", (event) => {
+      if (!pointer.active) return;
+      pointer.dx += event.clientX - pointer.lastX;
+      pointer.dy += event.clientY - pointer.lastY;
+      pointer.lastX = event.clientX;
+      pointer.lastY = event.clientY;
+    });
+    window.addEventListener("pointerup", () => {
+      pointer.active = false;
+      pointer.dx = 0;
+      pointer.dy = 0;
+    });
+  </script>
+</body>
+</html>
