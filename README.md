@@ -6,6 +6,8 @@
 
 GitHub Pages 备用：`https://alex12138356.github.io/jiajingcheng-store/`（大陆网络访问可能不稳定）
 
+AI 电商服务包：`ai-ecommerce.html`
+
 ## 说明
 
 - 本页面只展示服务与报价，不直接在 GitHub 上处理支付。

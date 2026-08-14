@@ -3,9 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="网站快检、整站体检、上线前质检和需求雷达服务，24 小时交付，报告可署你名，每条问题带截图，支持深圳公司开票。">
-  <link rel="canonical" href="https://jiajingcheng.com/service/">
-  <title>网站快检与需求雷达 | 佳景程科技</title>
+  <meta name="description" content="AI 电商服务：店铺诊断、商品文案、AI 客服、数据周报自动化。确认订单后通过微信发送专属付款码，支持深圳公司开票。">
+  <title>AI 电商服务包 | 佳景程科技</title>
   <style>
     :root {
       --bg: #f4f7f6;
@@ -46,6 +45,7 @@
       font-size: 12px;
       font-weight: 700;
     }
+    .badge a { color: #fff; text-decoration: none; }
     section {
       background: var(--surface);
       border: 1px solid var(--line);
@@ -66,6 +66,8 @@
     }
     .product b { font-size: 16px; }
     .product p { margin: 0; color: var(--muted); font-size: 14px; min-height: 42px; }
+    .product ul { margin: 0; padding-left: 18px; color: var(--muted); font-size: 14px; }
+    .product li { margin: 5px 0; }
     .price { color: var(--accent-strong); font-weight: 800; font-size: 20px; }
     .unit { font-size: 13px; color: var(--muted); font-weight: 600; }
     button, .button {
@@ -114,16 +116,26 @@
       object-fit: cover;
     }
     .qr-box span { display: block; margin-top: 6px; color: var(--muted); font-size: 13px; font-weight: 700; }
-    table { width: 100%; border-collapse: collapse; }
-    th, td { padding: 9px 10px; border-bottom: 1px solid var(--line); text-align: left; vertical-align: top; font-size: 14px; }
-    th { background: var(--accent-soft); font-weight: 800; }
-    tr:last-child td { border-bottom: 0; }
+    .demo {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+    }
+    .demo-card {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 16px;
+      background: #fbfdfc;
+    }
+    .demo-card b { display: block; margin-bottom: 8px; }
+    .demo-card .before { color: #9a3b34; font-size: 13px; margin-bottom: 8px; }
+    .demo-card .after { color: var(--accent-strong); font-size: 13px; }
     .note { color: var(--muted); font-size: 13px; margin-top: 10px; }
     .cta { background: var(--warm-soft); color: var(--warm); padding: 14px 16px; border-radius: var(--radius); font-weight: 800; margin-top: 14px; }
     @media (max-width: 760px) {
       .page { margin: 12px auto; }
       header, section { padding: 20px; }
-      .grid { grid-template-columns: 1fr; }
+      .grid, .demo { grid-template-columns: 1fr; }
       .order-row, .pay-row { grid-template-columns: 1fr; }
       .qr-box img { width: 140px; height: 140px; }
     }
@@ -132,59 +144,72 @@
 <body>
   <main class="page">
     <header>
-      <h1>网站快检与需求雷达</h1>
-      <p>确认订单后提供微信付款码 · 报告可署你名 · 可开公司发票</p>
+      <h1>AI 电商服务包</h1>
+      <p>把商品文案、客服回复、数据周报这些重复活交给 AI，你只管看效果。</p>
       <div class="badges">
-        <span class="badge">24 小时交付</span>
-        <span class="badge">报告可署你名</span>
-        <span class="badge">每条问题带截图</span>
-        <span class="badge">深圳公司开票</span>
-        <span class="badge"><a href="codex-install.html" style="color:#fff; text-decoration:none;">Codex 安装</a></span>
-        <span class="badge"><a href="ai-ecommerce.html" style="color:#fff; text-decoration:none;">AI 电商服务</a></span>
-        <span class="badge"><a href="https://codex-yi.com/" style="color:#fff; text-decoration:none;">Codex 壹</a></span>
-        <span class="badge"><a href="https://jiajingcheng.com/" style="color:#fff; text-decoration:none;">公司官网</a></span>
+        <span class="badge">10 条可执行优化</span>
+        <span class="badge">3 个真实场景落地</span>
+        <span class="badge">支持月度陪跑</span>
+        <span class="badge"><a href="index.html">网站快检</a></span>
+        <span class="badge"><a href="https://jiajingcheng.com/">公司官网</a></span>
       </div>
     </header>
 
     <section>
       <h2>选择服务</h2>
-      <div class="grid" id="products">
+      <div class="grid">
         <article class="product">
-          <b>单页快检</b>
-          <p>1 个页面，桌面 + 手机截图，最多 3 个确认问题。</p>
-          <div class="price">¥99 <span class="unit">/ 次</span></div>
-          <button type="button" onclick="choose('单页快检', 99)">选择</button>
+          <b>诊断版</b>
+          <p>先看你的店铺能省多少时间，再决定要不要继续。</p>
+          <div class="price">¥299 <span class="unit">/ 次</span></div>
+          <ul>
+            <li>30-60 分钟店铺体检</li>
+            <li>产品、标题、价格、客服、素材 5 个维度</li>
+            <li>当天交付报告</li>
+          </ul>
         </article>
         <article class="product">
-          <b>标准快检</b>
-          <p>首页 + 1 个关键服务页，完整报告 + 截图，24 小时交付。</p>
-          <div class="price">¥199 <span class="unit">/ 次</span></div>
-          <button type="button" onclick="choose('标准快检', 199)">选择</button>
+          <b>落地版</b>
+          <p>把最费时间的 3 个场景直接跑通。</p>
+          <div class="price">¥1999 <span class="unit">/ 次</span></div>
+          <ul>
+            <li>AI 商品文案</li>
+            <li>AI 客服自动回复</li>
+            <li>AI 数据周报或上架自动化</li>
+            <li>配置、陪跑、文档、1 个月售后</li>
+          </ul>
         </article>
         <article class="product">
-          <b>整站体检 / SEO 初检</b>
-          <p>全站主要页面，或首页 + 最多 5 个 URL 的 SEO 检查。</p>
-          <div class="price">¥399 <span class="unit">/ 次</span></div>
-          <button type="button" onclick="choose('整站体检 / SEO 初检', 399)">选择</button>
+          <b>陪跑版</b>
+          <p>持续优化，适合已经跑通基础自动化的店铺。</p>
+          <div class="price">¥3999 <span class="unit">/ 起</span></div>
+          <ul>
+            <li>3 个月持续优化</li>
+            <li>月度复盘与场景迭代</li>
+            <li>可按需加数字人直播、短视频生产</li>
+          </ul>
         </article>
-        <article class="product">
-          <b>上线前质检</b>
-          <p>核心路径检查 + 一次复测，适合准备上线的网站。</p>
-          <div class="price">¥499 <span class="unit">/ 次</span></div>
-          <button type="button" onclick="choose('上线前质检', 499)">选择</button>
-        </article>
-        <article class="product">
-          <b>整站体检月包</b>
-          <p>每月 2 次固定范围检查，持续跟踪网站健康变化。</p>
-          <div class="price">¥299 <span class="unit">/ 月</span></div>
-          <button type="button" onclick="choose('整站体检月包', 299)">选择</button>
-        </article>
-        <article class="product">
-          <b>需求雷达</b>
-          <p>每天 09:00 前微信发送 5 条可接单机会，适合想接单的人。</p>
-          <div class="price">¥99 <span class="unit">/ 月</span></div>
-          <button type="button" onclick="choose('需求雷达', 99)">选择</button>
-        </article>
+      </div>
+    </section>
+
+    <section>
+      <h2>现场效果</h2>
+      <div class="demo">
+        <div class="demo-card">
+          <b>商品标题</b>
+          <div class="before">之前：304不锈钢保温杯 大容量 男女通用</div>
+          <div class="after">之后：304不锈钢保温杯 大容量便携 12小时长效保温 学生上班族</div>
+        </div>
+        <div class="demo-card">
+          <b>客服回复</b>
+          <div class="before">之前：亲，价格已经最低了。</div>
+          <div class="after">之后：亲，现在是活动价，今天下单我帮您申请一个小赠品。</div>
+        </div>
+        <div class="demo-card">
+          <b>数据周报</b>
+          <div class="before">之前：周一 32 单，周二 28 单……</div>
+          <div class="after">之后：周六最高，周三退款率异常，建议周五加大投放预热周末。</div>
+        </div>
       </div>
     </section>
 
@@ -195,7 +220,7 @@
         <div><b>你选择的服务：</b><span id="selected">还没有选择</span></div>
         <div><b>金额：</b><span id="amount">-</span></div>
         <div class="order-row">
-          <a class="button secondary" id="mailLink" href="mailto:info@jiajingcheng.com?subject=佳景程服务下单">发邮件下单</a>
+          <a class="button secondary" id="mailLink" href="mailto:info@jiajingcheng.com?subject=AI电商服务下单">发邮件下单</a>
           <button class="secondary" type="button" onclick="reset()">重新选择</button>
         </div>
       </div>
@@ -203,47 +228,40 @@
         <div>
           <p>确认订单后，我们会通过微信发送对应金额的专属付款码。</p>
           <p>先付款后交付；需要发票时提供开票信息。</p>
-          <div class="cta">加微信发送：服务名称 + 网站链接或需求</div>
+          <div class="cta">加微信发送：服务名称 + 店铺平台 + 主营产品</div>
         </div>
         <div class="qr-box">
           <img src="assets/wechat-friend-qr.png" alt="微信好友二维码" width="150" height="150">
           <span>微信好友二维码</span>
         </div>
       </div>
-      <p class="note">付款码按订单生成，不在页面长期展示。收款方：深圳市佳景程科技有限公司，需要发票时登记开票信息。</p>
-    </section>
-
-    <section>
-      <h2>交付说明</h2>
-      <table>
-        <tr><th>服务</th><th>交付物</th><th>时间</th></tr>
-        <tr><td>网站快检</td><td>报告 + 截图 + 问题优先级</td><td>付款后 24 小时内</td></tr>
-        <tr><td>整站体检月包</td><td>每月 2 次检查 + 变化对比</td><td>按约定日期交付</td></tr>
-        <tr><td>需求雷达</td><td>每天 5 条可接单机会</td><td>每天 09:00 前微信发送</td></tr>
-      </table>
+      <p class="note">交付标准是跑通双方确认的业务场景，不承诺销量和爆单。收款方：深圳市佳景程科技有限公司，需要发票时登记开票信息。</p>
     </section>
   </main>
-
   <script>
-    const products = {
-      "单页快检": 99,
-      "标准快检": 199,
-      "整站体检 / SEO 初检": 399,
-      "上线前质检": 499,
-      "整站体检月包": 299,
-      "需求雷达": 99
-    };
+    const products = [
+      ["诊断版", 299],
+      ["落地版", 1999],
+      ["陪跑版", 3999]
+    ];
     function choose(name, price) {
       document.getElementById("selected").textContent = name;
-      document.getElementById("amount").textContent = "¥" + price;
-      const link = document.getElementById("mailLink");
-      link.href = "mailto:info@jiajingcheng.com?subject=" + encodeURIComponent("佳景程服务下单：" + name) + "&body=" + encodeURIComponent("我想购买：" + name + "\n金额：¥" + price + "\n我的需求：");
-      document.getElementById("order").scrollIntoView({ behavior: "smooth", block: "start" });
+      document.getElementById("amount").textContent = "¥" + price + " 起";
+      document.getElementById("mailLink").href = "mailto:info@jiajingcheng.com?subject=AI电商服务下单：" + encodeURIComponent(name);
+      window.location.hash = "#order";
     }
     function reset() {
       document.getElementById("selected").textContent = "还没有选择";
       document.getElementById("amount").textContent = "-";
+      document.getElementById("mailLink").href = "mailto:info@jiajingcheng.com?subject=AI电商服务下单";
     }
+    document.querySelectorAll(".product").forEach(function(card, i) {
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.textContent = "选择";
+      btn.onclick = function() { choose(products[i][0], products[i][1]); };
+      card.appendChild(btn);
+    });
   </script>
 </body>
 </html>
